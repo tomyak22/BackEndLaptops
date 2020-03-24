@@ -29,7 +29,6 @@ router.get('/laptops/team', (request, response, next) => {
 router.get('/laptops/all/:location', (request, response, next) => {
   const param = request.params.location.toLowerCase();
   console.log('got into /laptops/all/:location ' + param);
-  var tax_rate = 0;
 
   if (param === 'durham') {
     writeHeaders(0.08);
