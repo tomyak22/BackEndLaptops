@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 let read_json_file = () => {
-    let file = './data/contact.json';
+    let file = './data/laptops.json';
     return fs.readFileSync(file);
 }
 
@@ -9,16 +9,11 @@ exports.list = () => {
     return JSON.parse(read_json_file());
 };
 
-// exports.query_by_arg = (arg, value) => {
-//     let json_result = JSON.parse(read_json_file());
-//     // all addresses are stored in a "result" object
-//     let result = json_result.result;
-//     console.log("query by arg: " + arg + " " + value);
-//     for (let i = 0; i < result.length; i++) {
-//         let laptop = result[i];
-//         if (laptop[arg] === value) {
-//             return laptop;
-//         }
-//     }
-//     return null;
-// };
+exports.calculate_price = (tax) => {
+    let json_result = JSON.parse(read_json_file());
+    for (let i = 0; i < json_result.length; i++) {
+        var new_price = (json_result[i].price * (tax + 1)).toFixed(2);
+        json_result[i].price = new_price;
+    }
+    return json_result;
+}

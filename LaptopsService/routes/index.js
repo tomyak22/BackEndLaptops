@@ -25,46 +25,26 @@ router.get('/laptops/team', (request, response, next) => {
   }
 });
 
-// can process any existing query paramters (e.g.:?firstname=John)
-router.get('/laptops/all', (request, response, next) => {
-
-  let get_params = url.parse(request.url, true).query;
-  console.log('got into laptops');
-
-  if (Object.keys(get_params).length == 0) {
-    console.log('no params');
-    next(createError(404));
-    // response.setHeader('content-type', 'application/json');
-    // response.end(JSON.stringify(contacts.list()));
-  } else {
-    let key = Object.keys(get_params)[0]; // get first parameter only
-    console.log("First key is: " + key);
-    let value = request.query[key];
-    console.log('params ' + value);
-    let result = contacts.query_by_arg(key, value);
-    if (result) {
-      response.setHeader('content-type', 'application/json');
-      response.end(JSON.stringify(result));
-    } else {
-      next(createError(404));
-    }
-  }
-});
-
 // example for using path variable
 router.get('/laptops/all/:location', (request, response, next) => {
-  let locations = ["Raleigh", "Durham"];
-  const param = request.params.location;
+  const param = request.params.location.toLowerCase();
   console.log('got into /laptops/all/:location ' + param);
+  var tax_rate = 0;
 
-  const result = laptops.query_by_arg(
-    "location", param);
-  if (locations.contains(param)) {
-    response.setHeader('content-type', 'application/json');
-    response.end(JSON.stringify(result));
+  if (param === 'durham') {
+    writeHeaders(0.08);
+  } else if (param === 'raleigh') {
+    writeHeaders(0.075);
   } else {
     next(createError(404));
   }
+
+  function writeHeaders(tax_rate) {
+    const result = laptops.calculate_price(tax_rate);
+    response.setHeader('content-type', 'application/json');
+    response.end(JSON.stringify(result));
+  }
+  
 });
 
 module.exports = router;
