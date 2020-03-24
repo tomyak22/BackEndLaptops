@@ -47,18 +47,58 @@ router.get('/laptops/all/:location', (request, response, next) => {
 
 });
 
-router.post('/laptops/add', function(request, response){
+router.post('/laptops/add', function (request, response) {
   console.log(request.body);      // your JSON
-  //response.send(request.body);    // echo the result back
-  var obj = read_json_file();
-  console.log('json read file produces: ' + obj);
-  obj.push(request.body);
-  console.log(obj);
-//  var json = JSON.stringify(request.body);
-  //json.concat(obj)
-  fs.writeFile('./data/laptops.json', obj, function (err) {
-    if (err) return console.log(err);
+
+  
+
+  fs.readFile('./data/laptops.json', function (err, data) {
+    var object = request.body;
+    var json = JSON.parse(data);
+    json.push(object);
+
+    console.log("object = " + object);
+
+    fs.writeFile('./data/laptops.json', JSON.stringify(json), function (err) {
+      if (err) return console.log(err);
+    });
   });
+
+  //var fileContentsObject = JSON.parse('./data/laptops.json');
+  //console.log(fileContentsObject);
+
+  //var fileContents = fs.readFileSync('./data/laptops.json');
+  // fileContents = JSON.parse(fileContents);
+
+  // fileContents = JSON.stringify(fileContents);
+
+
+  // fileContents += object;
+
+  // fs.writeFile('./data/laptops.json', fileContents, function (err) {
+  //     if (err) return console.log(err); 
+  // });
+
+  // console.log(fileContents);
+  // fs.readFile('./data/laptops.json', function (err, object) {
+  //   console.log("Reading JSON");
+  //   var json = JSON.parse(object);
+  //   json.push(object);
+
+  //   fs.writeFile('./data/laptops.json', JSON.stringify(json))
+  // })
+
+  //var obj = read_json_file();
+  // console.log('json read file produces: ' + obj);
+  //obj.push(request.body);
+  //console.log(obj);
+  //  var json = JSON.stringify(request.body);
+  //json.concat(obj)
+  //fs.writeFile('./data/laptops.json', obj, function (err) {
+  //  if (err) return console.log(err);
+  //});
+
+  response.send("Success!");    // echo the result back
 });
 
 // router.post('/laptops/add', function (request, response) {
