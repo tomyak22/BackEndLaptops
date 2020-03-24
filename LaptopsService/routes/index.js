@@ -4,9 +4,10 @@ const createError = require('http-errors');
 const team = require('../modules/team');
 const laptops = require('../modules/laptops');
 const url = require('url');
+const fs = require('fs');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
@@ -29,7 +30,6 @@ router.get('/laptops/team', (request, response, next) => {
 router.get('/laptops/all/:location', (request, response, next) => {
   const param = request.params.location.toLowerCase();
   console.log('got into /laptops/all/:location ' + param);
-  var tax_rate = 0;
 
   if (param === 'durham') {
     writeHeaders(0.08);
@@ -44,7 +44,35 @@ router.get('/laptops/all/:location', (request, response, next) => {
     response.setHeader('content-type', 'application/json');
     response.end(JSON.stringify(result));
   }
-  
+
 });
+
+router.post('/laptops/add', function(request, response){
+  console.log(request.body);      // your JSON
+  //response.send(request.body);    // echo the result back
+  var obj = read_json_file();
+  console.log('json read file produces: ' + obj);
+  obj.push(request.body);
+  console.log(obj);
+//  var json = JSON.stringify(request.body);
+  //json.concat(obj)
+  fs.writeFile('./data/laptops.json', obj, function (err) {
+    if (err) return console.log(err);
+  });
+});
+
+// router.post('/laptops/add', function (request, response) {
+//   console.log('got into add');
+//   console.log('request body: ' + request.body);
+//   fs.readFile('./data/laptops.json', 'utf8', function readFileCallback(err, data){
+//     if (err){
+//         console.log(err);
+//     } else {
+//     obj = JSON.parse(data); //now it an object
+//     obj.push(request.body); //add some data
+//     json = JSON.stringify(obj); //convert it back to json
+//     fs.writeFile('./data/laptops.json', json, 'utf8'); // write it back 
+// }});
+// });
 
 module.exports = router;
