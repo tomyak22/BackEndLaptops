@@ -1,3 +1,4 @@
+// Global variables for route functions
 var express = require('express');
 var router = express.Router();
 
